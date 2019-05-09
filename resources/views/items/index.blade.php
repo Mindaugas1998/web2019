@@ -1,28 +1,41 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Create</title>
-</head>
-<body>
-<h1>Item List</h1>
-<div>
-    <a href="/">Homepage</a>
-</div>
-<div>
-        <button type="submit">Create New Project</button>
-</div>
+@extends('layouts.app')
 
-@foreach($items as $item)
-<div>
-    <li>
-        {{ $item->title }}
-        <div>{{ $item->description }}</div>
-        <div>{{ $item->price }}</div>
-        <div>{{ $item->phone }}</div>
-    </li>
-</div>
-@endforeach
+@section('content')
+    <div class="container">
+        <div class="row">
+            @foreach($items as $item)
+                <div class="col col-lg-3">
+                    <div class="card">
+                        <img class="card-img-top" src="/uploads/{{ $item->image }}"
+                             alt="Card image cap" style="max-width: 150px; max-height: 150px">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $item->title }}</h5>
+                            <p class="card-text">{{ $item->description }}</p>
+                            <a href="{{ route('items.show', $item->id) }}" class="btn btn-primary">View</a>
+                        </div>
+                        <div class="card-footer">{{ $item->price }}</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
-</body>
-</html>
+
+
+{{--    @foreach($items as $item)--}}
+{{--        <div>--}}
+{{--            <li>--}}
+{{--                {{ $item->title }}--}}
+{{--                <div>{{ $item->description }}</div>--}}
+{{--                <div>{{ $item->price }}</div>--}}
+{{--                <div>{{ $item->phone }}</div>--}}
+{{--                <div>--}}
+{{--                    <img src="/uploads/{{ $item->image }}" style="width: 50px; height: 50px">--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--        </div>--}}
+{{--    @endforeach--}}
+@endsection
+
+
+

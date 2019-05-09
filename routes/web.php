@@ -11,18 +11,18 @@
 |
 */
 
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/items', 'ItemsController@index');
+Route::get('/items', 'ItemsController@index')->name('items.index');
 
-Route::post('/items', 'ItemsController@store');
+Route::post('/items', 'ItemsController@store')->name('items.store');
 
-Route::get('/items/create', 'ItemsController@create');
+Route::get('/items/create', 'ItemsController@create')->name('items.create');
 
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/{itemID}', 'ItemsController@show')->name('items.show');

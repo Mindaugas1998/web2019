@@ -1,16 +1,15 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Home</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Home Page</h1>
+@extends('layouts.app')
 
-        <p>
-            <a href="/items">Create</a> a new Item.
-        </p>
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col col-lg-6">
+                <a href="/items" class="btn btn-primary btn-lg">Show items</a>
+            </div>
+            <div class="col col-lg-6">
+                <a href="/items/create" class="btn btn-warning btn-lg">Create item</a>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+@endsection
+
