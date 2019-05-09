@@ -29,6 +29,6 @@ Route::get('/{itemID}', 'ItemsController@show')->name('items.show');
 
 Route::patch('/{itemID}', 'ItemsController@update')->name('items.update');
 
-//Route::get('/{itemID}', 'ItemsController@destroy')->name('items.show');
+Route::delete('/{itemID}', 'ItemsController@destroy')->name('items.destroy');
 
 Route::get('/{itemID}/edit', 'ItemsController@edit')->name('items.edit');

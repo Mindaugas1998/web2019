@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 
@@ -82,5 +83,22 @@ class ItemsController extends Controller
         $item->phone = $request->get('phone');
         $item->save();
         return redirect()->route('items.index');
+    }
+
+    public function destroy($itemID)
+    {
+        $item = Item::find($itemID);
+        $deleted = $item->delete();
+
+        if(File::exists($item->image)){
+            File::delete($item->image);
+        }
+
+        if($deleted){
+            return response([
+                'success' => true,
+                'url' => route('items.index')
+            ]);
+        }
     }
 }

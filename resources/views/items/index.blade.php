@@ -19,22 +19,6 @@
             @endforeach
         </div>
     </div>
-
-
-
-{{--    @foreach($items as $item)--}}
-{{--        <div>--}}
-{{--            <li>--}}
-{{--                {{ $item->title }}--}}
-{{--                <div>{{ $item->description }}</div>--}}
-{{--                <div>{{ $item->price }}</div>--}}
-{{--                <div>{{ $item->phone }}</div>--}}
-{{--                <div>--}}
-{{--                    <img src="/uploads/{{ $item->image }}" style="width: 50px; height: 50px">--}}
-{{--                </div>--}}
-{{--            </li>--}}
-{{--        </div>--}}
-{{--    @endforeach--}}
 @endsection
 
 
