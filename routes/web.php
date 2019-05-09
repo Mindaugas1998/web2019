@@ -32,3 +32,13 @@ Route::patch('/{itemID}', 'ItemsController@update')->name('items.update');
 Route::delete('/{itemID}', 'ItemsController@destroy')->name('items.destroy');
 
 Route::get('/{itemID}/edit', 'ItemsController@edit')->name('items.edit');
+
+
+
+
+
+
+//admin
+Route::get('/admin/items', 'AdminController@showItems')->name('admin.items.index');
+Route::get('/admin/users', 'AdminController@showUsers')->name('admin.users.index');
+//Route::get('/admin/users/{userID}', 'AdminController@deleteUser')->name('admin.items.index');
