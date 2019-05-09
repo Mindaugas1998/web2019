@@ -14,7 +14,7 @@
 
 
                             @if($item->user_id == Auth::user()->id)
-                                <a href="{{ route('items.show', $item->id) }}" class="btn btn-warning">Update</a>
+                                <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">Edit</a>
                                 <a href="{{ route('items.show', $item->id) }}" class="btn btn-danger">Delete</a>
                             @else
                                 <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
