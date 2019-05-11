@@ -39,6 +39,10 @@ Route::get('/{itemID}/edit', 'ItemsController@edit')->name('items.edit');
 
 
 //admin
-Route::get('/admin/items', 'AdminController@showItems')->name('admin.items.index');
 Route::get('/admin/users', 'AdminController@showUsers')->name('admin.users.index');
 //Route::get('/admin/users/{userID}', 'AdminController@deleteUser')->name('admin.items.index');
+
+Route::get('/admin/items', ['middleware' => 'admin', 'as' => 'admin.items.index', 'uses' => 'AdminController@showItems']);
+Route::get('/admin/users', ['middleware' => 'admin', 'as' => 'admin.users.index', 'uses' => 'AdminController@showUsers']);
+
+
