@@ -23,6 +23,7 @@ class CreateItemsTable extends Migration
             $table->string('phone');
             $table->string('image')->nullable();
             $table->timestamps();
+
         });
     }
 
