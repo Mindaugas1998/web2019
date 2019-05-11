@@ -11,14 +11,16 @@
                             <h5 class="card-title">{{ $item->title }}</h5>
                             <p class="card-text">{{ $item->description }}</p>
                             <div>{{ $item->price }}</div>
-
-
+                        @if(Auth::user())
                             @if($item->user_id == Auth::user()->id)
                                 <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">Edit</a>
                                 <a href="{{ route('items.destroy', $item->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
                             @else
                                 <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
                             @endif
+                        @else
+                                <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
+                        @endif
                         </div>
                     </div>
                 </div>
