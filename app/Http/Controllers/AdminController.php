@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
 class AdminController extends Controller
@@ -64,7 +65,8 @@ class AdminController extends Controller
         $user->user_type = $request->get('user_type');
         $user->name = $request->get('name');
         $user->email = $request->get('email');
-        $user->password = $request->get('password');
+//        $user->password = $request->get('password');
+        $user->password = Hash::make($request->password);
 
         $user->save();
 

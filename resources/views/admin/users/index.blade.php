@@ -8,7 +8,11 @@
             <div class="col col-lg-4">
                 {{ $user->id }} {{ $user->name }} {{ $user->email}}
                 <a href="{{route('admin.users.show', $user->id)}}" class="btn btn-success">View</a>
-                <a href="{{ route('admin.users.destroy', $user->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
+                @if(Auth::user()->user_type == 1)
+                    @if($user->id != Auth::user()->id)
+                        <a href="{{ route('admin.users.destroy', $user->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
+                    @endif
+                @endif
                 <h3></h3>
             </div>
         @endforeach
@@ -22,7 +26,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    Do you really want to delete this item?
+                    Do you really want to delete this user?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
