@@ -2,21 +2,58 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <table class="items_table ">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>View</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
             @foreach($items as $item)
-                <div class="col col-lg-3">
-                    <div class="card">
-                        <img class="card-img-top" src="/uploads/{{ $item->image }}"
-                             alt="Card image cap" style="max-width: 150px; max-height: 150px">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->title }}</h5>
-                            <p class="card-text">{{ $item->description }}</p>
-                            <a href="{{ route('items.show', $item->id) }}" class="btn btn-primary">View</a>
-                        </div>
-                        <div class="card-footer">{{ $item->price }}</div>
-                    </div>
-                </div>
+                <tr>
+                    <td scope="row">{{$item->id}}</td>
+                    <td>{{$item->user_id}}</td>
+                    <td>{{$item->title}}</td>
+                    <td>{{$item->price}}</td>
+                    <td>
+                        <a href="{{route('admin.items.show', $item->id)}}" class="btn btn-success">View</a>
+                    </td>
+                    <td>
+                        @if(Auth::user()->user_type == 1)
+                            <form method="POST" action="/admin/items/{{ $item->id }}">
+                                @method('DELETE')
+                                @csrf
+                                <div class="field">
+                                    <div>
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
+                    </td>
+                </tr>
             @endforeach
-        </div>
+            </tbody>
+        </table>
+
+        {{--        <a href="{{route('admin.items.create')}}" class="btn btn-success">Create new user</a>--}}
+
     </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+
+        $(document).ready( function () {
+            $('.items_table').DataTable();
+        } );
+
+    </script>
+@endpush
+

@@ -35,19 +35,21 @@ Route::get('/items/{itemID}/edit', 'ItemsController@edit')->name('items.edit');
 
 
 
-
-
-
-//admin
-//Route::get('/admin/users', 'AdminController@showUsers')->name('admin.users.index');
-//Route::get('/admin/users/{userID}', 'AdminController@deleteUser')->name('admin.items.index');
+// ITEMS AND USERS INDEX
 
 Route::get('/admin/items', ['middleware' => 'admin', 'as' => 'admin.items.index', 'uses' => 'AdminController@showItems']);
 Route::get('/admin/users', ['middleware' => 'admin', 'as' => 'admin.users.index', 'uses' => 'AdminController@showUsers']);
 
-//Route::delete('/admin/users/{userID}', 'AdminController@deleteUser')->name('users.destroy');
-//Route::get('/{itemID}', 'AdminController@show')->name('items.show');
 
+// ITEMS
+
+Route::get('/admin/items/{itemsID}', ['middleware' => 'admin', 'as' => 'admin.items.show', 'uses' => 'AdminController@showItem']);
+
+Route::delete('/admin/items/{itemsID}', ['middleware' => 'admin', 'as' => 'admin.items.destroy', 'uses' => 'AdminController@destroyItem']);
+
+
+
+// USERS
 
 
 Route::post('/admin/users', 'AdminController@storeUser')->name('admin.users.store');

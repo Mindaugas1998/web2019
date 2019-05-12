@@ -33,13 +33,14 @@ class AdminController extends Controller
         return view('admin/users/index', compact('users'));
     }
 
-    public function deleteItem($itemID)
+    public function destroyItem($itemID)
     {
+        $item = Item::find($itemID);
+        $item->delete();
 
+        $items = Item::all();
+        return view('admin/items/index', compact('items'));
     }
-
-
-
 
 
     public function createUser()
@@ -73,6 +74,12 @@ class AdminController extends Controller
     {
         $user = User::find($userID);
         return view('admin.users.show', compact('user'));
+    }
+
+    public function showItem($itemID)
+    {
+        $item = Item::find($itemID);
+        return view('admin.items.show', compact('item'));
     }
 
     public function editUser($userID)

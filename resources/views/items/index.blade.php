@@ -5,7 +5,7 @@
         <div class="row">
             @foreach($items as $item)
                 <div class="col col-lg-3">
-                    <div class="card">
+                    <div class="card" style="max-height: 500px; max-width: 300px">
                         <img class="card-img-top" src="/uploads/{{ $item->image }}"
                              alt="Card image cap" style="max-width: 150px; max-height: 150px">
                         <div class="card-body">

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <table class="table ">
+        <table class="users_table ">
             <thead class="thead-dark">
                 <tr>
                     <th>ID</th>
@@ -53,7 +53,7 @@
     <script>
 
         $(document).ready( function () {
-            $('.table').DataTable();
+            $('.users_table').DataTable();
         } );
 
     </script>

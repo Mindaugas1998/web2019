@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\User;
+use App\Item;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
@@ -26,14 +27,13 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(\App\Item::class, function (Faker $faker) {
+$factory->define(Item::class, function (Faker $faker) {
     return [
         'user_id' => rand(1, 100),
         'title' => 'item' . Str::random(5),
         'description' => Str::random(30),
         'price' => rand(1, 200),
         'phone' => rand(861111111, 869999999),
-        'image' => '',
-//        'remember_token' => Str::random(10),
+        'image' => $faker->image('public/uploads',400,300, null, false)
     ];
 });
