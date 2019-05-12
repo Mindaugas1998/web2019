@@ -2,54 +2,60 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
+        <table class="table ">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User Type</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>View</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $user)
+                    <tr>
+                        <td scope="row">{{$user->id}}</td>
+                        <td>{{$user->user_type}}</td>
+                        <td>{{$user->name}}</td>
+                        <td>{{$user->email}}</td>
+                        <td>
+                            <a href="{{route('admin.users.show', $user->id)}}" class="btn btn-success">View</a>
+                        </td>
+                        <td>
+                            @if(Auth::user()->user_type == 1)
+                                @if($user->id != Auth::user()->id)
+                                    <form method="POST" action="/admin/users/{{ $user->id }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <div class="field">
+                                            <div>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                @endif
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-        @foreach($users as $user)
-            <div class="col col-lg-4">
-                {{ $user->id }} {{ $user->name }} {{ $user->email}}
-                <a href="{{route('admin.users.show', $user->id)}}" class="btn btn-success">View</a>
-                @if(Auth::user()->user_type == 1)
-                    @if($user->id != Auth::user()->id)
-                        <a href="{{ route('admin.users.destroy', $user->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
-                    @endif
-                @endif
-                <h3></h3>
-            </div>
-        @endforeach
+        <a href="{{route('admin.users.create')}}" class="btn btn-success">Create new user</a>
 
-        </div>
-            <a href="{{route('admin.users.create')}}" class="btn btn-success">Create new user</a>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    Do you really want to delete this user?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-sm btn-danger" onclick="destroyUser({{ json_encode(route('admin.users.destroy', $user->id)) }})">Delete</button>
-                </div>
-            </div>
-        </div>
     </div>
 
 @endsection
 
-<script>
-    function destroyUser(url) {
-        $.ajax({
-            url: url,
-            method: 'DELETE',
-            data: {
-                _token: {!! json_encode(csrf_token()) !!}
-            },
-            success: function (data) {
-                window.location = data['url'];
-            }
-        });
-    }
-</script>
+@push('scripts')
+    <script>
+
+        $(document).ready( function () {
+            $('.table').DataTable();
+        } );
+
+    </script>
+@endpush
 

@@ -27,14 +27,10 @@ class AdminController extends Controller
     public function destroyUser($userID)
     {
         $user = User::find($userID);
-        $deleted = $user->delete();
+        $user->delete();
 
-        if($deleted){
-            return response([
-                'success' => true,
-                'url' => route('admin.users.index')
-            ]);
-        }
+        $users = User::all();
+        return view('admin/users/index', compact('users'));
     }
 
     public function deleteItem($itemID)
