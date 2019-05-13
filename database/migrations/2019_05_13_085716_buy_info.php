@@ -17,7 +17,8 @@ class BuyInfo extends Migration
             $table->bigIncrements('id');
             $table->integer('item_id');
             $table->integer('user_id');
-            $table->string('address');
+            $table->string('contact_address');
+            $table->string('contact_phone');
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BuyInfo;
 use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -108,5 +109,29 @@ class ItemsController extends Controller
 
 
         return view('items.my_items', compact('items'));
+    }
+
+    public function buyItem(Request $request, $itemID)
+    {
+        $this->validate($request, [
+            'address' => 'required|string',
+            'phone' => 'required|integer',
+        ]);
+
+        $item = Item::find($itemID);
+        $item->is_bought = 1;
+        $item->save();
+
+        $buy_info = new BuyInfo();
+
+        $buy_info->item_id = $itemID;
+        $buy_info->user_id = Auth::user()->id;
+        $buy_info->contact_address = $request->get('address');
+        $buy_info->contact_phone = $request->get('phone');
+
+        $buy_info->save();
+
+        return view('items.show', compact('item'));
+
     }
 }

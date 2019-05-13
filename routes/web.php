@@ -29,6 +29,10 @@ Route::get('/items/create', 'ItemsController@create')->name('items.create');
 
 Route::get('/items/my_items', 'ItemsController@showMyItems')->name('items.my_items');
 
+
+Route::post('/items/buy_item/{itemID}', 'ItemsController@buyItem')->name('items.buy_item');
+
+
 Route::get('/items/{itemID}', 'ItemsController@show')->name('items.show');
 
 Route::patch('/items/{itemID}', 'ItemsController@update')->name('items.update');

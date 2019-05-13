@@ -12,12 +12,28 @@
                             <p class="card-text">{{ $item->description }}</p>
                             <div>{{ $item->price }}</div>
                         @if(Auth::user())
-                            @if($item->user_id == Auth::user()->id)
-                                <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                <a href="{{ route('items.destroy', $item->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
-                            @elseif(Auth::user()->user_type == 0)
-                                <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
+                            @if($item->is_bought == 0)
+                                @if($item->user_id == Auth::user()->id)
+                                    <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                    <a href="{{ route('items.destroy', $item->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
+                                @elseif(Auth::user()->user_type == 0)
+                                    <a class="btn btn-success" data-toggle="modal" data-target="#buyModal">Buy</a>
+                                @endif
+                            @else
+                                @if(Auth::user()->boughtByMe($item->id))
+                                    <div class="alert alert-success" role="alert">
+                                        Congratulations!!! You have bought this item!
+                                    </div>
+                                @else
+                                    <div class="alert alert-warning" role="alert">
+                                        Item already bought
+                                    </div>
+                                @endif
                             @endif
+                        @else
+                            <div class="alert alert-warning" role="alert">
+                                Please login to buy
+                            </div>
                         @endif
                         </div>
                     </div>
@@ -36,6 +52,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-sm btn-danger" onclick="destroyItem({{ json_encode(route('items.destroy', $item->id)) }})">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="buyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+
+
+                    <form enctype="multipart/form-data" action="{{ route('items.buy_item', $item->id) }}" id="createItem" class="form-horizontal" method="POST" >
+                        {{csrf_field()}}
+
+                        <div class="form-group">
+                            <label for="title">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Your address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title">Phone</label>
+                            <input type="number" class="form-control" id="phone" name="phone" placeholder="Your phone">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

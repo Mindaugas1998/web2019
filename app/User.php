@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -40,5 +41,15 @@ class User extends Authenticatable
     public function items()
     {
         return $this->hasMany('App\Item');
+    }
+
+    public function boughtByMe($itemID)
+    {
+        $buy_info = BuyInfo::where('item_id', $itemID)->first();
+        if($buy_info->user_id == Auth::user()->id){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
