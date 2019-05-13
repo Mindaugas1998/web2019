@@ -41,7 +41,7 @@
             </tbody>
         </table>
 
-        {{--        <a href="{{route('admin.items.create')}}" class="btn btn-success">Create new user</a>--}}
+        <a href="{{route('admin.items.create')}}" class="btn btn-success">Create new item</a>
 
     </div>
 

@@ -47,6 +47,12 @@ class AdminController extends Controller
     {
         return view('admin.users.create');
     }
+
+    public function createItem()
+    {
+        return view('admin.items.create');
+    }
+
     public function storeUser(Request $request)
     {
         $validatedData = $request->validate([
@@ -55,7 +61,6 @@ class AdminController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-
 
         $user = new User();
 
@@ -69,6 +74,37 @@ class AdminController extends Controller
 
         return redirect('admin/users');
     }
+
+    public function storeItem(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required',
+            'item_title' => 'required',
+            'item_description' => 'required',
+            'item_price' => 'required',
+            'item_phone' => 'required'
+        ]);
+
+        $item = new Item();
+
+        $item->user_id = $request->get('user_id');
+        $item->title = $request->get('item_title');
+        $item->description = $request->get('item_description');
+        $item->price = $request->get('item_price');
+        $item->phone = $request->get('item_phone');
+        if(Input::hasFile('image')){
+            $image = Input::file('image');
+            $image->move('uploads/', $image->getClientOriginalName());
+            $imagePath = $image->getClientOriginalName();
+        }
+
+        $item->image = $imagePath;
+
+        $item->save();
+
+        return redirect('admin/items');
+    }
+
 
     public function showUser($userID)
     {
@@ -91,6 +127,15 @@ class AdminController extends Controller
 
     }
 
+    public function editItem($itemID)
+    {
+        $item = Item::find($itemID);
+
+        return view('admin.items.edit')
+            ->with('item', $item);
+
+    }
+
     public function updateUser(Request $request, $userID)
     {
         $this->validate($request, [
@@ -106,5 +151,28 @@ class AdminController extends Controller
         $user->password = $request->get('password');
         $user->save();
         return redirect()->route('admin.users.index');
+    }
+
+    public function updateItem(Request $request, $itemID)
+    {
+        $this->validate($request, [
+//            'user_id' => 'required',
+            'item_title' => 'required',
+            'item_description' => 'required',
+            'item_price' => 'required',
+            'item_phone' => 'required'
+        ]);
+
+        $item = Item::find($itemID);
+
+//        $item->user_id = $request->get('user_id');
+        $item->title = $request->get('item_title');
+        $item->description = $request->get('item_description');
+        $item->price = $request->get('item_price');
+        $item->phone = $request->get('item_phone');
+
+        $item->save();
+
+        return redirect()->route('admin.items.index');
     }
 }

@@ -56,10 +56,20 @@ Route::get('/admin/users', ['middleware' => 'admin', 'as' => 'admin.users.index'
 
 // ITEMS
 
+Route::get('/admin/items/create', ['middleware' => 'admin', 'as' => 'admin.items.create', 'uses' => 'AdminController@createItem']);
+
+Route::post('/admin/items', 'AdminController@storeItem')->name('admin.items.store');
+
 Route::get('/admin/items/{itemsID}', ['middleware' => 'admin', 'as' => 'admin.items.show', 'uses' => 'AdminController@showItem']);
+
+Route::patch('/admin/items/{itemsID}', 'AdminController@updateItem')->name('admin.items.update');
+
+
 
 Route::delete('/admin/items/{itemsID}', ['middleware' => 'admin', 'as' => 'admin.items.destroy', 'uses' => 'AdminController@destroyItem']);
 
+
+Route::get('/admin/items/{itemsID}/edit', ['middleware' => 'admin', 'as' => 'admin.items.edit', 'uses' => 'AdminController@editItem']);
 
 
 // USERS
