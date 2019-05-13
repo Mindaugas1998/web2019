@@ -57,9 +57,9 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-
-                                    <a href="{{ route('items.index') }}">My items</a>
-
+                                @if(Auth::user()->user_type != 1)
+                                    <a href="{{ route('items.my_items') }}">My items</a>
+                                @endif
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

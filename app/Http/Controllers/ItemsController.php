@@ -101,4 +101,12 @@ class ItemsController extends Controller
             ]);
         }
     }
+
+    public function showMyItems()
+    {
+        $items = Item::where('user_id', Auth::user()->id)->get();
+
+
+        return view('items.my_items', compact('items'));
+    }
 }

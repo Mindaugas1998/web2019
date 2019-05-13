@@ -19,11 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 Route::get('/items', 'ItemsController@index')->name('items.index');
 
 Route::post('/items', 'ItemsController@store')->name('items.store');
 
 Route::get('/items/create', 'ItemsController@create')->name('items.create');
+
+Route::get('/items/my_items', 'ItemsController@showMyItems')->name('items.my_items');
 
 Route::get('/items/{itemID}', 'ItemsController@show')->name('items.show');
 
@@ -32,6 +36,11 @@ Route::patch('/items/{itemID}', 'ItemsController@update')->name('items.update');
 Route::delete('/items/{itemID}', 'ItemsController@destroy')->name('items.destroy');
 
 Route::get('/items/{itemID}/edit', 'ItemsController@edit')->name('items.edit');
+
+
+
+
+
 
 
 
