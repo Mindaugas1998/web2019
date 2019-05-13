@@ -15,11 +15,9 @@
                             @if($item->user_id == Auth::user()->id)
                                 <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">Edit</a>
                                 <a href="{{ route('items.destroy', $item->id) }}" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete</a>
-                            @else
+                            @elseif(Auth::user()->user_type == 0)
                                 <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
                             @endif
-                        @else
-                                <a href="{{ route('items.show', $item->id) }}" class="btn btn-success">Buy</a>
                         @endif
                         </div>
                     </div>

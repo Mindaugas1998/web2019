@@ -22,6 +22,7 @@ class CreateItemsTable extends Migration
             $table->float('price');
             $table->string('phone');
             $table->string('image')->nullable();
+            $table->integer('is_bought')->default(0);
             $table->timestamps();
 
         });
