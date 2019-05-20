@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BuyInfo;
 use App\Item;
+use App\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -32,23 +33,34 @@ class ItemsController extends Controller
             'image' => 'required'
         ]);
 
-        $item = new Item();
+        try {
+            $item = new Item();
 
-        $item->user_id = Auth::user()->id;
-        $item->title = request('title');
-        $item->description = request('description');
-        $item->price = request('price');
-        $item->phone = request('phone');
-        if(Input::hasFile('image')){
-            $image = Input::file('image');
-            $image->move('uploads/', $image->getClientOriginalName());
-            $imagePath = $image->getClientOriginalName();
+            $item->user_id = Auth::user()->id;
+            $item->title = request('title');
+            $item->description = request('description');
+            $item->price = request('price');
+            $item->phone = request('phone');
+            if(Input::hasFile('image')){
+                $image = Input::file('image');
+                $image->move('uploads/', $image->getClientOriginalName());
+                $imagePath = $image->getClientOriginalName();
+            }
+            $item->image = $imagePath;
+
+            $item->save();
+
+            $log = new Log();
+            $log->log = 'User: ' . Auth::user()->id . ' created item ' . $item->title;
+            $log->save();
+
+            return redirect('items');
         }
-        $item->image = $imagePath;
-
-        $item->save();
-
-        return redirect('items');
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
     public function show($itemID)
@@ -77,29 +89,52 @@ class ItemsController extends Controller
             'price' => 'required',
             'phone' => 'required'
         ]);
-        $item = Item::find($itemID);
-        $item->title = $request->get('title');
-        $item->description = $request->get('description');
-        $item->price = $request->get('price');
-        $item->phone = $request->get('phone');
-        $item->save();
-        return redirect()->route('items.index');
+        try {
+            $item = Item::find($itemID);
+            $item->title = $request->get('title');
+            $item->description = $request->get('description');
+            $item->price = $request->get('price');
+            $item->phone = $request->get('phone');
+            $item->save();
+
+            $log = new Log();
+            $log->log = 'User: ' . Auth::user()->id . ' edited item ' . $item->title;
+            $log->save();
+
+            return redirect()->route('items.index');
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
     public function destroy($itemID)
     {
-        $item = Item::find($itemID);
-        $deleted = $item->delete();
+        try {
+            $item = Item::find($itemID);
+            $deleted = $item->delete();
 
-        if(File::exists($item->image)){
-            File::delete($item->image);
+            if(File::exists($item->image)){
+                File::delete($item->image);
+            }
+
+            $log = new Log();
+            $log->log = 'User: ' . Auth::user()->id . ' deleted item ' . $item->title;
+            $log->save();
+
+            if($deleted){
+                return response([
+                    'success' => true,
+                    'url' => route('items.index')
+                ]);
+            }
         }
-
-        if($deleted){
-            return response([
-                'success' => true,
-                'url' => route('items.index')
-            ]);
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
         }
     }
 
@@ -133,5 +168,15 @@ class ItemsController extends Controller
 
         return view('items.show', compact('item'));
 
+    }
+
+    public function getIndex()
+    {
+        $json_url = 'https://api.darksky.net/forecast/06d3d09fa7209984883deb1f79cea0e6/54.396121,24.045931?units=auto&exclude=[minutely%2Chourly%2Cdaily&fbclid=IwAR3ttNxqfmpgCSy-LhMfbMPZ4AembN7rIqRIBjPkkqO2SznV-7YpXP73hGU';
+        $json = file_get_contents($json_url);
+        $decode = json_decode($json, True);
+        $decode['currently']['time'] = gmdate("F j, Y, g:i a", $decode['currently']['time'] + 10800);
+        $decode['currently']['humidity'] = $decode['currently']['humidity'] * 100;
+        return view('welcome', compact('decode'));
     }
 }

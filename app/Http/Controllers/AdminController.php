@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Log;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,20 +27,44 @@ class AdminController extends Controller
 
     public function destroyUser($userID)
     {
-        $user = User::find($userID);
-        $user->delete();
+        try {
+            $user = User::find($userID);
+            $user->delete();
 
-        $users = User::all();
-        return view('admin/users/index', compact('users'));
+            $users = User::all();
+
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' deleted user ' . $user->name;
+            $log->save();
+
+            return view('admin/users/index', compact('users'));
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
     public function destroyItem($itemID)
     {
-        $item = Item::find($itemID);
-        $item->delete();
+        try {
+            $item = Item::find($itemID);
+            $item->delete();
 
-        $items = Item::all();
-        return view('admin/items/index', compact('items'));
+            $items = Item::all();
+
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' deleted item ' . $item->title;
+            $log->save();
+
+            return view('admin/items/index', compact('items'));
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
 
@@ -62,17 +87,28 @@ class AdminController extends Controller
             'password' => 'required'
         ]);
 
-        $user = new User();
+        try {
+            $user = new User();
 
-        $user->user_type = $request->get('user_type');
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
+            $user->user_type = $request->get('user_type');
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
 //        $user->password = $request->get('password');
-        $user->password = Hash::make($request->password);
+            $user->password = Hash::make($request->password);
 
-        $user->save();
+            $user->save();
 
-        return redirect('admin/users');
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' created user ' . $user->name;
+            $log->save();
+
+            return redirect('admin/users');
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
     public function storeItem(Request $request)
@@ -85,24 +121,35 @@ class AdminController extends Controller
             'item_phone' => 'required'
         ]);
 
-        $item = new Item();
+        try {
+            $item = new Item();
 
-        $item->user_id = $request->get('user_id');
-        $item->title = $request->get('item_title');
-        $item->description = $request->get('item_description');
-        $item->price = $request->get('item_price');
-        $item->phone = $request->get('item_phone');
-        if(Input::hasFile('image')){
-            $image = Input::file('image');
-            $image->move('uploads/', $image->getClientOriginalName());
-            $imagePath = $image->getClientOriginalName();
+            $item->user_id = $request->get('user_id');
+            $item->title = $request->get('item_title');
+            $item->description = $request->get('item_description');
+            $item->price = $request->get('item_price');
+            $item->phone = $request->get('item_phone');
+            if(Input::hasFile('image')){
+                $image = Input::file('image');
+                $image->move('uploads/', $image->getClientOriginalName());
+                $imagePath = $image->getClientOriginalName();
+            }
+
+            $item->image = $imagePath;
+
+            $item->save();
+
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' created item ' . $item->title;
+            $log->save();
+
+            return redirect('admin/items');
         }
-
-        $item->image = $imagePath;
-
-        $item->save();
-
-        return redirect('admin/items');
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
     }
 
 
@@ -144,13 +191,27 @@ class AdminController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-        $user = User::find($userID);
-        $user->user_type = $request->get('user_type');
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        $user->password = $request->get('password');
-        $user->save();
-        return redirect()->route('admin.users.index');
+
+        try {
+            $user = User::find($userID);
+            $user->user_type = $request->get('user_type');
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
+            $user->password = $request->get('password');
+            $user->save();
+
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' edited user ' . $user->name;
+            $log->save();
+
+            return redirect()->route('admin.users.index');
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
+
     }
 
     public function updateItem(Request $request, $itemID)
@@ -163,16 +224,29 @@ class AdminController extends Controller
             'item_phone' => 'required'
         ]);
 
-        $item = Item::find($itemID);
+        try {
+            $item = Item::find($itemID);
 
 //        $item->user_id = $request->get('user_id');
-        $item->title = $request->get('item_title');
-        $item->description = $request->get('item_description');
-        $item->price = $request->get('item_price');
-        $item->phone = $request->get('item_phone');
+            $item->title = $request->get('item_title');
+            $item->description = $request->get('item_description');
+            $item->price = $request->get('item_price');
+            $item->phone = $request->get('item_phone');
 
-        $item->save();
+            $item->save();
 
-        return redirect()->route('admin.items.index');
+            $log = new Log();
+            $log->log = 'Admin: ' . Auth::user()->id . ' edited item ' . $item->title;
+            $log->save();
+
+            return redirect()->route('admin.items.index');
+        }
+        catch (Exception $e) {
+            $log->log = $e->getMessage();
+            $log->save();
+            return redirect()->back();
+        }
+
+
     }
 }

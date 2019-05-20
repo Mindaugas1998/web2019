@@ -19,6 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/', [
+    'uses' => 'ItemsController@getIndex',
+    'as' => 'page.index'
+]);
+
 
 
 Route::get('/items', 'ItemsController@index')->name('items.index');
@@ -52,7 +57,6 @@ Route::get('/items/{itemID}/edit', 'ItemsController@edit')->name('items.edit');
 
 Route::get('/admin/items', ['middleware' => 'admin', 'as' => 'admin.items.index', 'uses' => 'AdminController@showItems']);
 Route::get('/admin/users', ['middleware' => 'admin', 'as' => 'admin.users.index', 'uses' => 'AdminController@showUsers']);
-
 
 // ITEMS
 

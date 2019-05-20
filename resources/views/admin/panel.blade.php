@@ -25,11 +25,5 @@
                 @endif
             @endif
         </div>
-        <div>date: {{ $decode['currently']['time'] }}</div>
-        <div>Right now in: {{ $decode['alerts']['0']['regions']['0'] }}</div>
-        <div>{{ $decode['currently']['summary'] }}</div>
-        <div>Temperature: {{ $decode['currently']['temperature'] }}°C</div>
-        <div>Humidity: {{ $decode['currently']['humidity'] }}%</div>
     </div>
 @endsection
-
